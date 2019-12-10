@@ -1,21 +1,15 @@
 # confidence-calibration
 Assess performance of human and machine probabilistic forecasts using confidence calibration and ROC curves and various metrics
 
-The analysis methods we use can be divided into discrimination tests (e.g., sensitivity, specificity) and calibration tests. 
-Calibration tests follow a group of probabilistic predictions to determine how well the predictions correspond to reality.
-Take the example of a weather forecaster making probabilistic predictions about the chance of rain. Let's say over the course of 
-a year, he makes 100 forecasts of there being a 20% chance of rain the following day. We collect all these forecasts and check 
-to see whether or not it rained the following day. If the forecaster is well-calibrated, then we expect there to be 20 days of 
-rain out of those 100 days. Repeating the same process for his 40%, 60%, and 80% predictions of rain, we expect to see rain 
-on 40, 60, and 80 of those 100 days, respectively.
+A web-based version can be found at http://checkmyai.com/ 
 
 The python notebook applies visual and numerical verification techniques available for analyzing these types of 
-probabilistic forecasts, and outputs the data in the form of a confidence calibration curve, a receiver operating characteristics
-(ROC) curve, and various metrics for assessing different aspects of these predictions. 
+probabilistic forecasts, and outputs the data in the form of a confidence calibration curve, a receiver operating
+characteristics (ROC) curve, and various metrics for assessing different aspects of these predictions. 
 
-The required input data are 2 python arrays: truth (either 0 or 1) and forecasts (real numbers from 0 to 1, inclusive). We've also 
-included a few sample files in the csvs folder to get you started. The output is a matplotlib plot  element (plt), a dictionary of 
-metrics (metrics), and a confusion matrix (cm).
+The required input data are 2 numpy arrays: truth (either 0 or 1) and forecasts (real numbers from 0 to 1, inclusive). 
+We've also included a few sample files in the csvs folder to get you started. The output is a matplotlib plot element
+(plt), a dictionary of metrics (metrics), and a confusion matrix (cm).
 
 Optional inputs are:
 -plot_ci: Plot confidence intervals on the calibration curve (true by default)
@@ -34,3 +28,21 @@ forecast= d[:,1]
 
 (plt,metrics,cm)=plot_calib_results(truth, forecast, plot_ci=True, plot_isoskill=False, nplots=3, fig_title="",n_bins=20)
 plt.show()
+
+We also provide a way of printing out a radar plot of the metrics. First, define the array of metrics
+you want to plot. The names have to correspond to metric names used by the code. We recommend the 
+following order:
+
+array_of_names=['Calibration loss','Calib-in-the-large','Confidence score',
+                'Specificity','NPV','Accuracy','PPV','Sensitivity',
+                'AUC','Resolution','Refinement loss',
+                'Brier score loss', 'Brier skill score']
+
+
+Then the data has to be reformatted as such:
+
+data_radar=create_data_for_radar_plot(metrics,array_of_names)
+
+Then call the function:
+
+p=plot_radar_chart(data=data_radar,forecaster_names=['Forecaster'],plot_file_name='test')
